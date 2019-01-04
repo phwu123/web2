@@ -1,0 +1,11 @@
+@import './variables.css';
+
+body {
+  background-color: var(--color-main-bg);
+}
+
+#outer-container {
+  display: grid;
+  grid-template-rows: 10vh auto 10vh;
+
+}
