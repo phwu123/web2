@@ -1,0 +1,27 @@
+@import './variables.css';
+
+#splash {
+  display: grid;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20vh 20vw;
+  background-color: var(--color-main-bg);
+  color: var(--color-text);
+  font-size: var(--font-size-splash);
+  z-index: 2;
+}
+
+#attributes {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 2px solid white;
+  cursor: pointer;
+}

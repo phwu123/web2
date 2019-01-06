@@ -1,0 +1,14 @@
+@import '../../variables.css';
+
+.attribute-circle {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  border: 2px solid white;
+  cursor: pointer;
+}
+
+.attribute-circle:hover {
+  background-color: white;
+  transition: all 1s;
+}

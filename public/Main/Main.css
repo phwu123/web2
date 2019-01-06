@@ -1,0 +1,29 @@
+@import '../variables.css';
+
+#main-page {
+  display: grid;
+  grid-template-rows: 100px auto 100px;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-main-bg);
+  height: 100vh;
+}
+
+#upper {
+  display: flex;
+  background-color: var(--color-main-menu);
+}
+
+#center {
+  opacity: 0;
+}
+
+#lower {
+  display: flex;
+  background-color: var(--color-main-menu);
+}
+
+.container {
+  height: 100%;
+  width: 100vw;
+}
