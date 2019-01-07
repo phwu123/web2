@@ -10,10 +10,13 @@ main.innerHTML = `
 `;
 
 class mainPage extends HTMLElement {
+  static get observedAttributes() {
+    return ['type'];
+  }
   constructor() {
     super();
     this.appendChild(main.cloneNode(true));
   }
 }
 
-customElements.define('main-page', mainPage)
+customElements.define('main-page', mainPage);

@@ -1,3 +1,3 @@
 #Website\
 In progress\
-No dependencies except nodemon, express, body-parser for dev
+No external dependencies except nodemon, express, body-parser for dev
