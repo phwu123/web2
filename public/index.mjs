@@ -33,6 +33,7 @@ class splashPage extends HTMLElement {
     this.FADE_SPACING = 0.5 * 1000;
     this.startTime = null;
     this.eachFrame = this.eachFrame.bind(this)
+    this.confirmingSelectionChoice = false
   }
 
   connectedCallback() {
@@ -100,11 +101,14 @@ class splashPage extends HTMLElement {
   }
 
   confirmSelectionChoice() {
-    document.getElementById('splash-page').shadowRoot.getElementById('selected-attribute').classList.remove('attribute-details-active');
-    document.getElementById('splash-page').eachFrame(true);
-    setTimeout(() => {
-      document.getElementById('app-container').removeChild(document.getElementById('splash-page'));
-    }, 3000);
+    if (!this.confirmSelectionChoice) {
+      this.confirmSelectionChoice = true
+      document.getElementById('splash-page').shadowRoot.getElementById('selected-attribute').classList.remove('attribute-details-active');
+      document.getElementById('splash-page').eachFrame(true);
+      setTimeout(() => {
+        document.getElementById('app-container').removeChild(document.getElementById('splash-page'));
+      }, 3000);
+    }
   }
 
   appendMainPage() {

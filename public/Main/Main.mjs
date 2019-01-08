@@ -4,6 +4,9 @@ main.innerHTML = `
 <div id="main-page">
 <div id="upper" class="container"></div>
 <div id="center" class="container">
+  <div id="symbol-large" class="category-box"></div>
+  <div id="skill-tree" class="category-box"></div>
+  <div id="node-details" class="category-box"></div>
 </div>
 <div id="lower" class="container"></div>
 </div>

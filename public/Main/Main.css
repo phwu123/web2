@@ -2,7 +2,7 @@
 
 #main-page {
   display: grid;
-  grid-template-rows: 100px auto 100px;
+  grid-template-rows: 50px auto 50px;
   justify-content: center;
   align-items: center;
   background-color: var(--color-main-bg);
@@ -15,7 +15,31 @@
 }
 
 #center {
-  opacity: 0;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-gap: 20px;
+}
+
+#symbol-large {
+
+}
+
+#skill-tree {
+
+}
+
+#node-details {
+
+}
+
+.category-box {
+  border: 2px solid var(--color-text);
+  border-radius: 10px;
+  height: 90%;
+  width: 90%;
+  justify-self: center;
 }
 
 #lower {
