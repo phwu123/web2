@@ -1,12 +1,7 @@
 @import '../variables.css';
 
 #main-page {
-  display: grid;
-  grid-template-rows: 50px auto 50px;
-  justify-content: center;
-  align-items: center;
   background-color: var(--color-main-bg);
-  height: 100vh;
 }
 
 #upper {
@@ -18,8 +13,9 @@
   display: grid;
   justify-content: center;
   align-items: center;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  grid-gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100vw;
+  height: 100vh;
 }
 
 #symbol-large {
@@ -37,9 +33,9 @@
 .category-box {
   border: 2px solid var(--color-text);
   border-radius: 10px;
-  height: 90%;
-  width: 90%;
   justify-self: center;
+  height: 500px;
+  width: 300px;
 }
 
 #lower {
@@ -48,6 +44,27 @@
 }
 
 .container {
-  height: 100%;
-  width: 100vw;
+  height: 600px;
+  width: 300px;
+}
+
+.centered {
+  position: absolute;
+  top: calc(50% - 50px);
+  left: calc(50% - 50px);
+}
+
+.move-0 {
+  top: calc(50% - 250px);
+  transition: all 1s;
+}
+
+.move-01 {
+  left: calc(50% - 150px);
+  transition: all 1s;
+}
+
+.move-02 {
+  left: calc(50% + 50px);
+  transition: all 1s;
 }

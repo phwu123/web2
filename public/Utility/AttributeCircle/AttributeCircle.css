@@ -12,3 +12,9 @@
   background-color: white;
   transition: all 1s;
 }
+
+.small-circle {
+  transform: scale(0.5);
+  border: 3px solid white;
+  transition: all 1s;
+}

@@ -6,7 +6,7 @@ attribute.innerHTML = `
 
 class attributeCircle extends HTMLElement {
   static get observedAttributes() {
-    return ['type', 'active'];
+    return ['type'];
   }
   
   constructor() {

@@ -37,7 +37,8 @@ class splashPage extends HTMLElement {
   }
 
   connectedCallback() {
-    document.getElementById('splash-page').appendChild(this.createAttributeScript());
+    // document.getElementById('splash-page').appendChild(this.createAttributeScript());
+    this.appendChild(this.createAttributeScript())
     this.addEventListeners();
     this.eachFrame()
   }
