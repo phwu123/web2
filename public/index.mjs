@@ -33,6 +33,7 @@ class splashPage extends HTMLElement {
     this.FADE_SPACING = 0.5 * 1000;
     this.startTime = null;
     this.eachFrame = this.eachFrame.bind(this)
+    this.handleSelectionChoice = this.handleSelectionChoice.bind(this)
     this.confirmingSelectionChoice = false
   }
 
@@ -52,9 +53,7 @@ class splashPage extends HTMLElement {
     const attributes = [...collection];
     attributes.map((child) => {
       child.toggleAttribute('hover-splash')
-      child.addEventListener('click', () => {
-        this.handleSelectionChoice(child.getAttribute('type'))
-      })
+      child.addEventListener('click', this.handleSelectionChoice)
     })
     setTimeout(() => {
       const circle = this.shadowRoot.getElementById('chosen-circle');
@@ -66,12 +65,10 @@ class splashPage extends HTMLElement {
     const collection = this.shadowRoot.getElementById('attributes').children;
     const attributes = [...collection];
     attributes.map((child) => {
-      child.removeEventListener('click', () => {
-        this.handleSelectionChoice(child.getAttribute('type'))
-      })
+      child.removeEventListener('click', this.handleSelectionChoice)
     })
     const circle = this.shadowRoot.getElementById('chosen-circle');
-    circle.addEventListener('click', this.confirmSelectionChoice);
+    circle.removeEventListener('click', this.confirmSelectionChoice);
   }
 
   attributeChangedCallback(name, oldVal, newVal) {
@@ -97,8 +94,8 @@ class splashPage extends HTMLElement {
     return mainScript;
   }
 
-  handleSelectionChoice(type) {
-    this.setAttribute('selection', type);
+  handleSelectionChoice(e) {
+    this.setAttribute('selection', e.target.getAttribute('type'));
   }
 
   confirmSelectionChoice() {
