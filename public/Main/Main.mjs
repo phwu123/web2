@@ -21,12 +21,12 @@ class mainPage extends HTMLElement {
   constructor() {
     super();
     this.appendChild(main.cloneNode(true));
+    this.node0Set = false;
   }
 
   connectedCallback() {
     this.appendChild(this.createAttributeScript());
-    const node = document.createElement('attribute-circle');
-    this.setNode(node, 0);
+    this.setNode0();
   }
 
   createAttributeScript() {
@@ -36,37 +36,51 @@ class mainPage extends HTMLElement {
     return attributeScript;
   }
 
-  setNode(node, num) {
-    node.setAttribute('type', `${this.getAttribute('type')}${num}`)
+  setNode0() {
+    const node = document.createElement('attribute-circle');
+    node.id = '0'
     node.classList.add('centered');
     document.getElementById('node-zone').appendChild(node);
-    if (num === 0) {
-      node.addEventListener('click', () => {
-        this.clickCircle(node, `${num}`, true)
-      })
-    } else if (num.length === 2) {
-      this.clickCircle(node, `${num}`)
+    node.addEventListener('click', this.handleNode0)
+  }
+
+  handleNode0() {
+    const node = document.getElementById('0')
+    const shadow = node.shadowRoot.children[0].children[1]
+    if (!this.node0Set) {
+      node.classList.add(`move-${node.id}`)
+      if ([...shadow.classList].includes('backwards')) {
+        shadow.classList.remove('backwards')
+      }
+      shadow.classList.add('small-circle')
+      this.node0Set = true
+    } else {
+      node.classList.remove(`move-${node.id}`)
+      shadow.classList.remove('small-circle')
+      setTimeout(() => {
+  //      shadow.classList.add('backwards')
+      }, 500);
+      this.node0Set = false
     }
   }
 
   clickCircle(incNode, num, bool) {
-    let node
-    if (bool) {
-      node = incNode.cloneNode(true)
-      incNode.parentNode.replaceChild(node, incNode);
-    } else {
-      node = incNode
-    }
+
     if (num.length < 3) {
-      node.classList.add(`move-${num}`);
-      node.shadowRoot.childNodes[0].childNodes[3].classList.add('small-circle')
-      const nodeLeft = document.createElement('attribute-circle')
-      const nodeRight = document.createElement('attribute-circle')
-      setTimeout(() => {
-        this.setNode(nodeLeft, `${num}` + 1)
-        this.setNode(nodeRight, `${num}` + 2)
-      }, 1000);
+   //   node.shadowRoot.childNodes[0].childNodes[3].classList.add('small-circle')
+      this.moveCircle(node, num)
+      // node.classList.add(`move-${num}`);
+      // const nodeLeft = document.createElement('attribute-circle')
+      // const nodeRight = document.createElement('attribute-circle')
+      // setTimeout(() => {
+      //   this.setNode(nodeLeft, `${num}` + 1)
+      //   this.setNode(nodeRight, `${num}` + 2)
+      // }, 1000);
     }  
+  }
+  moveCircle(node, num) {
+    node.classList.add(`move-${num}`);
+    node.classList.remove('initial')
   }
 }
 

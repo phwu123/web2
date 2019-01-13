@@ -37,7 +37,6 @@ class splashPage extends HTMLElement {
   }
 
   connectedCallback() {
-    // document.getElementById('splash-page').appendChild(this.createAttributeScript());
     this.appendChild(this.createAttributeScript())
     this.addEventListeners();
     this.eachFrame()
@@ -52,6 +51,7 @@ class splashPage extends HTMLElement {
     const collection = this.shadowRoot.getElementById('attributes').children;
     const attributes = [...collection];
     attributes.map((child) => {
+      child.toggleAttribute('hover-splash')
       child.addEventListener('click', () => {
         this.handleSelectionChoice(child.getAttribute('type'))
       })

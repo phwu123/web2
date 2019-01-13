@@ -6,13 +6,22 @@ attribute.innerHTML = `
 
 class attributeCircle extends HTMLElement {
   static get observedAttributes() {
-    return ['type'];
+    return ['type', 'hover-splash'];
   }
   
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.appendChild(attribute.cloneNode(true));
+  }
+
+  connectedCallback() {
+    
+  }
+  attributeChangedCallback(name, oldVal, newVal) {
+    if (this.hasAttribute('hover-splash')) {
+      this.shadowRoot.querySelector('.attribute-circle').classList.add('hover-splash')
+    }
   }
 }
 
