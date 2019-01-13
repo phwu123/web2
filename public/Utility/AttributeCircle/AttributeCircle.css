@@ -6,7 +6,7 @@
   border-radius: 50%;
   border: 2px solid white;
   cursor: pointer;
-  transition: transform 2s ease-in;
+  transition: transform 1.5s ease-in;
 }
 
 .hover-splash:hover {
@@ -15,12 +15,7 @@
 }
 
 .small-circle {
-  transform: scale(0.5);
+  transform: scale(0.3);
   border: 3px solid white;
-  transition: all 2s ease-in;
-}
-
-.backwards {
-  border: 2px solid white;
-  transition: all 2s ease-out;
+  transition: all 1.5s ease-in;
 }

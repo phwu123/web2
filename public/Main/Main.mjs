@@ -21,12 +21,22 @@ class mainPage extends HTMLElement {
   constructor() {
     super();
     this.appendChild(main.cloneNode(true));
-    this.node0Set = false;
+    this.nodeSelected = {};
+    this.nodeZoom = {};
+    this.eventListeners = []
   }
 
   connectedCallback() {
     this.appendChild(this.createAttributeScript());
-    this.setNode0();
+    this.setNode(0);
+    this.setEventListener(0);
+    this.children[0].children[1].addEventListener('click', this.unfocusNodes)
+  }
+
+  disconnectedCallback() {
+    for (let i = 0; i < 5; i++) {
+      this.destroyEventListener(i);
+    }
   }
 
   createAttributeScript() {
@@ -36,51 +46,146 @@ class mainPage extends HTMLElement {
     return attributeScript;
   }
 
-  setNode0() {
+  setNode(num) {
     const node = document.createElement('attribute-circle');
-    node.id = '0'
-    node.classList.add('centered');
+    node.id = `${num}`
+    if (!num) {
+      node.classList.add('centered');
+      this.nodeZoom[num] = true
+    } else if (num === 1 || num === 2) {
+      node.classList.add('top');
+      node.toggleAttribute('small-circle', true)
+    }
     document.getElementById('node-zone').appendChild(node);
-    node.addEventListener('click', this.handleNode0)
-  }
-
-  handleNode0() {
-    const node = document.getElementById('0')
-    const shadow = node.shadowRoot.children[0].children[1]
-    if (!this.node0Set) {
-      node.classList.add(`move-${node.id}`)
-      if ([...shadow.classList].includes('backwards')) {
-        shadow.classList.remove('backwards')
-      }
-      shadow.classList.add('small-circle')
-      this.node0Set = true
-    } else {
-      node.classList.remove(`move-${node.id}`)
-      shadow.classList.remove('small-circle')
+    if (num) {
       setTimeout(() => {
-  //      shadow.classList.add('backwards')
-      }, 500);
-      this.node0Set = false
+        this.handleInitialMovement(num)
+        this.setEventListener(num)
+      }, 200);
     }
   }
 
-  clickCircle(incNode, num, bool) {
-
-    if (num.length < 3) {
-   //   node.shadowRoot.childNodes[0].childNodes[3].classList.add('small-circle')
-      this.moveCircle(node, num)
-      // node.classList.add(`move-${num}`);
-      // const nodeLeft = document.createElement('attribute-circle')
-      // const nodeRight = document.createElement('attribute-circle')
-      // setTimeout(() => {
-      //   this.setNode(nodeLeft, `${num}` + 1)
-      //   this.setNode(nodeRight, `${num}` + 2)
-      // }, 1000);
-    }  
+  setEventListener(num) {
+    const node = document.getElementById(num).shadowRoot.children[0].children[1]
+    this.eventListeners[num] = () => {
+      this.handleClicks(num);
+    }
+    node.addEventListener('click', this.eventListeners[num])
   }
-  moveCircle(node, num) {
-    node.classList.add(`move-${num}`);
-    node.classList.remove('initial')
+
+  destroyEventListener(num) {
+    const node = document.getElementById(num).shadowRoot.children[0].children[1]
+    node.removeEventListener('click', this.eventListeners[num])
+  }
+
+  handleClicks(num) {
+    switch (num) {
+      case 0:
+        this.handleNode0();
+        break;
+      case 1:
+      case 2:
+        this.handleNode1(num)
+      default:
+        break;
+    }
+  }
+
+  handleInitialMovement(num) {
+    const node = document.getElementById(num);
+    node.classList.add(`move-${node.id}`);
+    node.toggleAttribute('small-circle', true);
+    if (!num) {
+      setTimeout(() => {
+        this.setNode(1);
+        this.setNode(2);
+      }, 1500);
+    }
+  }
+
+  handleMovement(num) {
+    const node = document.getElementById(num);
+    switch (num) {
+      case 0:
+        node.classList.remove(`move-${node.id}`)
+        node.toggleAttribute('small-circle', false);
+        this.nodeSelected[num] = true
+        break;
+      case 1:
+      case 2:
+        if (this.nodeZoom[num]) {
+          node.classList.remove('top')
+          node.classList.add('centered')
+        } else {
+          node.classList.remove('centered')
+          node.classList.add('top')
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  handleMove0() {
+
+  }
+
+  handleNode0() {
+    if (this.nodeZoom[0]) {
+      this.nodeSelected[0] = true
+      this.nodeZoom[0] = false
+      this.cleanUpNodes()
+    } else if (!this.nodeZoom[0]) {
+      this.focusNode(0)
+    }
+  }
+
+  handleNode1(num) {
+    this.handleMovement(num)
+  }
+
+  setNode1() {
+    const node = document.createElement('attribute-circle')
+  }
+
+  cleanUpNodes() {
+    if (document.getElementById(1)) {
+      for (let i = 1; i < 3; i++) {
+        const node = document.getElementById(i)
+        this.nodeSelected[i] = false;
+        node.classList.add('top')
+        node.classList.remove(`move-${i}`)
+        this.destroyEventListener(i)
+        node.parentNode.removeChild(node);
+      }
+    }
+    this.handleInitialMovement(0)
+  }
+
+  focusNode(num) {
+    this.nodeZoom[num] = true
+    const node = document.getElementById(num);
+    node.classList.remove(`move-${num}`)
+    node.toggleAttribute('small-circle', false)
+  }
+
+  unfocusAll(e) {
+    for (let i = 0; i < 5; i++) {
+      if (document.getElementById(i) && e.target !== document.getElementById(i)) {
+        for (let num in this.nodeZoom) {
+          if (this.nodeZoom[num]) {
+            this.unfocusNode(num)
+          }
+        }
+      }
+    }
+  }
+
+  unfocusNode(num) {
+    const node = document.getElementById(num);
+    node.classList.add(`move-${num}`)
+    node.toggleAttribute('small-cirle', true)
+    this.nodeZoom[num] = false
   }
 }
 

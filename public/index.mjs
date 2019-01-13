@@ -14,7 +14,7 @@ splash.innerHTML = `
     <div id="attribute-details">
       <span id="chosen-circle"></span>
       <div class="details">
-        <span>Assocations</span>
+        <span>Associations</span>
       </div>
       <span id="selected-attribute"></span>
     </div>
@@ -65,7 +65,7 @@ class splashPage extends HTMLElement {
     const collection = this.shadowRoot.getElementById('attributes').children;
     const attributes = [...collection];
     attributes.map((child) => {
-      child.removeEventListener('click', this.handleSelectionChoice)
+      child.removeEventListener('click', this.handleSelectionChoice);
     })
     const circle = this.shadowRoot.getElementById('chosen-circle');
     circle.removeEventListener('click', this.confirmSelectionChoice);
@@ -138,9 +138,9 @@ class splashPage extends HTMLElement {
       window.requestAnimationFrame(() => this.eachFrame(fade))
     } else if (((new Date()).getTime() - this.startTime) < 3000) {
       this.toggleOpacity((new Date()).getTime() - this.startTime, fade)
-      window.requestAnimationFrame(() => this.eachFrame(fade))
+      window.requestAnimationFrame(() => this.eachFrame(fade));
     } else {
-      this.startTime = null
+      this.startTime = null;
     }
   }
 
