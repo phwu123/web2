@@ -6,7 +6,7 @@ attribute.innerHTML = `
 
 class attributeCircle extends HTMLElement {
   static get observedAttributes() {
-    return ['type', 'small-circle', 'hover-splash'];
+    return ['type', 'small-circle', 'hover-splash', 'selected'];
   }
   
   constructor() {
@@ -17,13 +17,26 @@ class attributeCircle extends HTMLElement {
 
   attributeChangedCallback(name, oldVal, newVal) {
     const classList = this.shadowRoot.querySelector('.attribute-circle').classList
-    if (this.hasAttribute('hover-splash')) {
-      classList.add('hover-splash')
-    }
-    if (this.hasAttribute('small-circle')) {
-      classList.add('small-circle') 
-    } else {
-      classList.remove('small-circle')
+
+    switch (name) {
+      case 'hover-splash':
+        if (this.hasAttribute('hover-splash')) {
+          classList.add('hover-splash')
+        }
+        break;
+      case 'small-circle':
+        if (this.hasAttribute('small-circle')) {
+          classList.add('small-circle'); 
+        } else {
+          classList.remove('small-circle');
+        }
+        break
+      case 'selected':
+        if (this.hasAttribute('selected')) {
+          classList.add('selected');
+        } else {
+          classList.remove('selected');
+        }
     }
   }
 }

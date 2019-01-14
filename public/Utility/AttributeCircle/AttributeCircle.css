@@ -19,3 +19,8 @@
   border: 3px solid white;
   transition: all 1.5s ease-in;
 }
+
+.selected {
+  background-color: white;
+  transition: background-color 1s;
+}

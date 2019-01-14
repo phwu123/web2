@@ -23,17 +23,18 @@ class mainPage extends HTMLElement {
     this.appendChild(main.cloneNode(true));
     this.nodeSelected = {};
     this.nodeZoom = {};
-    this.eventListeners = []
+    this.eventListeners = [];
   }
 
   connectedCallback() {
     this.appendChild(this.createAttributeScript());
     this.setNode(0);
     this.setEventListener(0);
-    this.children[0].children[1].addEventListener('click', this.unfocusNodes)
+    this.children[0].children[1].addEventListener('click', this.deselectNodes)
   }
 
   disconnectedCallback() {
+    this.children[0].children[1].removeEventListener('click', this.deselectNodes)
     for (let i = 0; i < 5; i++) {
       this.destroyEventListener(i);
     }
@@ -169,9 +170,10 @@ class mainPage extends HTMLElement {
     node.toggleAttribute('small-circle', false)
   }
 
-  unfocusAll(e) {
-    for (let i = 0; i < 5; i++) {
-      if (document.getElementById(i) && e.target !== document.getElementById(i)) {
+  unfocusAll() {
+    console.log('hi')
+    for (let i = 4; i > -1; i--) {
+      if (document.getElementById(i)) {
         for (let num in this.nodeZoom) {
           if (this.nodeZoom[num]) {
             this.unfocusNode(num)
@@ -184,8 +186,14 @@ class mainPage extends HTMLElement {
   unfocusNode(num) {
     const node = document.getElementById(num);
     node.classList.add(`move-${num}`)
-    node.toggleAttribute('small-cirle', true)
+    node.toggleAttribute('small-circle', true)
     this.nodeZoom[num] = false
+  }
+
+  deselectNodes(e) {
+    if (e.target.id === 'skill-tree') {
+      this.parentNode.parentNode.unfocusAll()
+    }
   }
 }
 
