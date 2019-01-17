@@ -6,7 +6,7 @@ attribute.innerHTML = `
 
 class attributeCircle extends HTMLElement {
   static get observedAttributes() {
-    return ['type', 'small-circle', 'hover-splash', 'selected'];
+    return ['type', 'small-circle', 'hover-splash', 'selected', 'hide'];
   }
   
   constructor() {
@@ -30,13 +30,22 @@ class attributeCircle extends HTMLElement {
         } else {
           classList.remove('small-circle');
         }
-        break
+        break;
       case 'selected':
         if (this.hasAttribute('selected')) {
           classList.add('selected');
         } else {
           classList.remove('selected');
         }
+        break;
+      case 'hide':
+        if (this.hasAttribute('hide')) {
+          classList.add('hide');
+        } else {
+          classList.remove('hide');
+        }
+      default:
+        break;
     }
   }
 }

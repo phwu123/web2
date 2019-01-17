@@ -21,8 +21,8 @@ class mainPage extends HTMLElement {
   constructor() {
     super();
     this.appendChild(main.cloneNode(true));
-    this.nodeSelected = {};
     this.nodeZoom = {};
+    this.nodeBlock = {};
     this.eventListeners = [];
   }
 
@@ -31,6 +31,7 @@ class mainPage extends HTMLElement {
     this.setNode(0);
     this.setEventListener(0);
     this.children[0].children[1].addEventListener('click', this.deselectNodes)
+    this.unblockAll()
   }
 
   disconnectedCallback() {
@@ -82,11 +83,17 @@ class mainPage extends HTMLElement {
   handleClicks(num) {
     switch (num) {
       case 0:
+        if (this.nodeBlock[0]) break;
         this.handleNode0();
         break;
       case 1:
+        if (this.nodeBlock[1]) break;
+        this.handleMovement(num)
+        break
       case 2:
-        this.handleNode1(num)
+        if (this.nodeBlock[2]) break;
+        this.handleMovement(num)
+        break
       default:
         break;
     }
@@ -95,6 +102,7 @@ class mainPage extends HTMLElement {
   handleInitialMovement(num) {
     const node = document.getElementById(num);
     node.classList.add(`move-${node.id}`);
+    this.nodeZoom[num] = false
     node.toggleAttribute('small-circle', true);
     if (!num) {
       setTimeout(() => {
@@ -102,51 +110,36 @@ class mainPage extends HTMLElement {
         this.setNode(2);
       }, 1500);
     }
+    this.unblockAll()
   }
 
   handleMovement(num) {
-    const node = document.getElementById(num);
-    switch (num) {
-      case 0:
-        node.classList.remove(`move-${node.id}`)
-        node.toggleAttribute('small-circle', false);
-        this.nodeSelected[num] = true
-        break;
-      case 1:
-      case 2:
-        if (this.nodeZoom[num]) {
-          node.classList.remove('top')
-          node.classList.add('centered')
-        } else {
-          node.classList.remove('centered')
-          node.classList.add('top')
-        }
-        break;
-      default:
-        break;
+    if (!this.nodeZoom[num]) {
+      this.focusNode(num);
+    } else {
+      this.selectNode(num);
+      this.unfocusNode(num);
     }
-  }
-
-  handleMove0() {
-
   }
 
   handleNode0() {
     if (this.nodeZoom[0]) {
-      this.nodeSelected[0] = true
-      this.nodeZoom[0] = false
+      this.selectNode(0)
       this.cleanUpNodes()
     } else if (!this.nodeZoom[0]) {
+      this.deselectNode(0)
       this.focusNode(0)
     }
   }
 
-  handleNode1(num) {
-    this.handleMovement(num)
+  selectNode(num) {
+    const node = document.getElementById(num);
+    node.toggleAttribute('selected', true);
   }
 
-  setNode1() {
-    const node = document.createElement('attribute-circle')
+  deselectNode(num) {
+    const node = document.getElementById(num);
+    node.toggleAttribute('selected', false);
   }
 
   cleanUpNodes() {
@@ -164,35 +157,74 @@ class mainPage extends HTMLElement {
   }
 
   focusNode(num) {
-    this.nodeZoom[num] = true
     const node = document.getElementById(num);
-    node.classList.remove(`move-${num}`)
-    node.toggleAttribute('small-circle', false)
-  }
-
-  unfocusAll() {
-    console.log('hi')
-    for (let i = 4; i > -1; i--) {
-      if (document.getElementById(i)) {
-        for (let num in this.nodeZoom) {
-          if (this.nodeZoom[num]) {
-            this.unfocusNode(num)
-          }
-        }
-      }
+    if (node.hasAttribute('selected')) {
+      node.toggleAttribute('selected', false);
+      return
     }
+    this.nodeZoom[num] = true;
+    node.classList.remove(`move-${num}`)
+    if (num === 1 || num === 2) {
+      node.classList.remove('top');
+    }
+    if (num) {
+      node.classList.add('centered');
+    }
+    node.toggleAttribute('small-circle', false)
+    for (let block in this.nodeBlock) {
+      if (document.getElementById(block) && block != num) {
+        this.nodeBlock[block] = true;
+        document.getElementById(block).toggleAttribute('hide', true);
+      };
+    };
   }
 
   unfocusNode(num) {
     const node = document.getElementById(num);
     node.classList.add(`move-${num}`)
+    if (num > 0) {
+      node.classList.remove('centered');
+    }
+    if (num == 1 || num == 2) {
+      node.classList.add('top');
+    }
     node.toggleAttribute('small-circle', true)
     this.nodeZoom[num] = false
+    for (let block in this.nodeBlock) {
+      if (block !== num) {
+        this.nodeBlock[block] = false;
+        if (document.getElementById(block)) {
+          document.getElementById(block).toggleAttribute('hide', false);
+        };
+      };
+    };
+  }
+
+  unfocusAll() {
+    for (let i = 4; i > -1; i--) {
+      if (document.getElementById(i)) {
+        for (let num in this.nodeZoom) {
+          if (this.nodeZoom[num]) {
+            this.unfocusNode(num);
+          };
+        };
+      };
+    };
   }
 
   deselectNodes(e) {
+    e.stopPropagation();
+    if (this.parentNode.parentNode.nodeZoom[0]) {
+      return
+    }
     if (e.target.id === 'skill-tree') {
       this.parentNode.parentNode.unfocusAll()
+    }
+  }
+
+  unblockAll() {
+    for (let i = 0; i < 5; i++) {
+      this.nodeBlock[i] = false
     }
   }
 }

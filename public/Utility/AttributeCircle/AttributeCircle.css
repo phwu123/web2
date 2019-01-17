@@ -22,5 +22,8 @@
 
 .selected {
   background-color: white;
-  transition: background-color 1s;
+}
+
+.hide {
+  opacity: 0;
 }
