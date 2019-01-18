@@ -24,9 +24,13 @@ class mainPage extends HTMLElement {
     this.nodeZoom = {};
     this.nodeBlock = {};
     this.eventListeners = [];
+    this.MAX_SKILL_POINTS = 4;
+    this.skillPoints = null;
+    this.treeSelected = {};
   }
 
   connectedCallback() {
+    this.skillPoints = this.MAX_SKILL_POINTS
     this.appendChild(this.createAttributeScript());
     this.setNode(0);
     this.setEventListener(0);
@@ -54,9 +58,15 @@ class mainPage extends HTMLElement {
     if (!num) {
       node.classList.add('centered');
       this.nodeZoom[num] = true
-    } else if (num === 1 || num === 2) {
+    } else if (num < 3) {
       node.classList.add('top');
       node.toggleAttribute('small-circle', true)
+    } else if (num < 5) {
+      node.classList.add('left');
+      node.toggleAttribute('small-circle', true)
+    } else if (num < 7) {
+      node.classList.add('right');
+      node.toggleAttribute('small-circle', true);
     }
     document.getElementById('node-zone').appendChild(node);
     if (num) {
@@ -78,6 +88,17 @@ class mainPage extends HTMLElement {
   destroyEventListener(num) {
     const node = document.getElementById(num).shadowRoot.children[0].children[1]
     node.removeEventListener('click', this.eventListeners[num])
+  }
+
+  selectNode(num) {
+    const node = document.getElementById(num);
+    node.toggleAttribute('selected', true);
+  }
+
+  deselectNode(num) {
+    const node = document.getElementById(num);
+    node.toggleAttribute('selected', false);
+    this.treeSelected[num] = false;
   }
 
   handleClicks(num) {
@@ -114,39 +135,57 @@ class mainPage extends HTMLElement {
   }
 
   handleMovement(num) {
+    const node = document.getElementById(num);
     if (!this.nodeZoom[num]) {
       this.focusNode(num);
-    } else {
+    } else if (this.nodeZoom[num]) {
       this.selectNode(num);
       this.unfocusNode(num);
+      if (num === 0 || (num === 1 && !this.treeSelected[2]) || (num === 2 && !this.treeSelected[1])) {
+        this.treeSelected[num] = true
+        setTimeout(() => {
+          this.setNode(num * 2 + 1);
+          this.setNode(num * 2 + 2);
+        }, 1500);
+      }
+    } else if (node.getAttribute('selected')) {
+
     }
   }
 
   handleNode0() {
     if (this.nodeZoom[0]) {
-      this.selectNode(0)
+      this.deselectAll()
       this.cleanUpNodes()
+      this.selectNode(0)
     } else if (!this.nodeZoom[0]) {
       this.deselectNode(0)
       this.focusNode(0)
     }
   }
 
-  selectNode(num) {
-    const node = document.getElementById(num);
-    node.toggleAttribute('selected', true);
-  }
-
-  deselectNode(num) {
-    const node = document.getElementById(num);
-    node.toggleAttribute('selected', false);
-  }
-
   cleanUpNodes() {
-    if (document.getElementById(1)) {
-      for (let i = 1; i < 3; i++) {
-        const node = document.getElementById(i)
-        this.nodeSelected[i] = false;
+    for (let i = 5; i < 7; i++) {
+      const node = document.getElementById(i)
+      if (node) {
+        node.classList.add('right')
+        node.classList.remove(`move-${i}`)
+        this.destroyEventListener(i)
+        node.parentNode.removeChild(node);
+      }
+    }
+    for (let i = 3; i < 5; i++) {
+      const node = document.getElementById(i)
+      if (node) {
+        node.classList.add('left')
+        node.classList.remove(`move-${i}`)
+        this.destroyEventListener(i)
+        node.parentNode.removeChild(node);
+      }
+    }
+    for (let i = 1; i < 3; i++) {
+      const node = document.getElementById(i)
+      if (node) {
         node.classList.add('top')
         node.classList.remove(`move-${i}`)
         this.destroyEventListener(i)
@@ -159,7 +198,7 @@ class mainPage extends HTMLElement {
   focusNode(num) {
     const node = document.getElementById(num);
     if (node.hasAttribute('selected')) {
-      node.toggleAttribute('selected', false);
+      this.deselectNode(num)
       return
     }
     this.nodeZoom[num] = true;
@@ -201,7 +240,7 @@ class mainPage extends HTMLElement {
   }
 
   unfocusAll() {
-    for (let i = 4; i > -1; i--) {
+    for (let i = 7; i > -1; i--) {
       if (document.getElementById(i)) {
         for (let num in this.nodeZoom) {
           if (this.nodeZoom[num]) {
@@ -210,6 +249,14 @@ class mainPage extends HTMLElement {
         };
       };
     };
+  }
+
+  deselectAll() {
+    for (let i = 7; i > -1; i--) {
+      if (document.getElementById(i)) {
+        this.deselectNode(i)
+      }
+    }
   }
 
   deselectNodes(e) {
@@ -223,7 +270,7 @@ class mainPage extends HTMLElement {
   }
 
   unblockAll() {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 7; i++) {
       this.nodeBlock[i] = false
     }
   }
