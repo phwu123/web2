@@ -21,15 +21,17 @@ class mainPage extends HTMLElement {
     super();
     this.appendChild(main.cloneNode(true));
     this.eventListeners = [];
-    this.skillPoints = {
-      strength: [],
-      intelligence: [],
-      dexterity: []
+    this.classPoints = {
+      Strength: [],
+      Intelligence: [],
+      Dexterity: []
     }
-    this.MAX_SKILL_POINTS = 5;
+    this.MAX_CLASS_POINTS = 5;
+    this.classPointsRemaining = null
   }
 
   connectedCallback() {
+    this.classPointsRemaining = this.MAX_CLASS_POINTS - this.classPoints.Strength.length - this.classPoints.Intelligence - this.classPoints.Dexterity
     this.appendChild(this.createSkillTreeScript())
     const skillTree = document.createElement('skill-tree')
     document.getElementById('skill-tree-container').appendChild(skillTree)

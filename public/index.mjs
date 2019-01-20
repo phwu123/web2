@@ -1,5 +1,4 @@
-const splash = document.createElement('splash');
-splash.innerHTML = `
+const splashTemplate = `
   <link rel="stylesheet" type="text/css" media="screen" href="Splash.css" />
   <div id="splash">
     <div id="selection">
@@ -27,8 +26,7 @@ class splashPage extends HTMLElement {
 
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' });
-    this.shadowRoot.appendChild(splash.cloneNode(true));
+    this.innerHTML = splashTemplate;
     this.FADE_DURATION = 1.5 * 1000;
     this.FADE_SPACING = 0.5 * 1000;
     this.startTime = null;
@@ -44,35 +42,34 @@ class splashPage extends HTMLElement {
   }
 
   disconnectedCallback() {
-    this.removeEventListeners();
     this.appendMainPage();
   }
 
   addEventListeners() {
-    const collection = this.shadowRoot.getElementById('attributes').children;
+    const collection = document.getElementById('attributes').children;
     const attributes = [...collection];
     attributes.map((child) => {
       child.toggleAttribute('hover-splash')
       child.addEventListener('click', this.handleSelectionChoice)
     })
     setTimeout(() => {
-      const circle = this.shadowRoot.getElementById('chosen-circle');
+      const circle = document.getElementById('chosen-circle');
       circle.addEventListener('click', this.confirmSelectionChoice);
     }, 3000);
   }
 
   removeEventListeners() {
-    const collection = this.shadowRoot.getElementById('attributes').children;
+    const collection = document.getElementById('attributes').children;
     const attributes = [...collection];
     attributes.map((child) => {
       child.removeEventListener('click', this.handleSelectionChoice);
     })
-    const circle = this.shadowRoot.getElementById('chosen-circle');
+    const circle = document.getElementById('chosen-circle');
     circle.removeEventListener('click', this.confirmSelectionChoice);
   }
 
   attributeChangedCallback(name, oldVal, newVal) {
-    const element = this.shadowRoot.getElementById('selected-attribute');
+    const element = document.getElementById('selected-attribute');
     if (!oldVal) {
       element.parentNode.classList.add('attribute-details-active');
       element.parentNode.style.opacity = 1;
@@ -101,9 +98,10 @@ class splashPage extends HTMLElement {
   confirmSelectionChoice() {
     if (!this.confirmSelectionChoice) {
       this.confirmSelectionChoice = true
-      document.getElementById('splash-page').shadowRoot.getElementById('selected-attribute').classList.remove('attribute-details-active');
+      document.getElementById('selected-attribute').classList.remove('attribute-details-active');
       document.getElementById('splash-page').eachFrame(true);
       setTimeout(() => {
+        document.getElementById('splash-page').removeEventListeners();
         document.getElementById('app-container').removeChild(document.getElementById('splash-page'));
       }, 3000);
     }
@@ -116,10 +114,10 @@ class splashPage extends HTMLElement {
   }
 
   toggleOpacity(currTime, fadeOut) {
-    const first = this.shadowRoot.querySelectorAll('.intro')[0];
-    const second = this.shadowRoot.querySelectorAll('.intro')[1];
-    const third = this.shadowRoot.getElementById('attributes');
-    const fourth = this.shadowRoot.getElementById('attribute-details');
+    const first = this.querySelectorAll('.intro')[0];
+    const second = this.querySelectorAll('.intro')[1];
+    const third = document.getElementById('attributes');
+    const fourth = document.getElementById('attribute-details');
 
     const opFirst = this.clamp(currTime / this.FADE_DURATION);
     const opSecond = this.clamp((currTime - this.FADE_SPACING) / this.FADE_DURATION);

@@ -13,8 +13,8 @@ class skillTree extends HTMLElement {
     this.nodeZoom = {};
     this.nodeBlock = {};
     this.eventListeners = [];
-    this.MAX_SKILL_POINTS = 4;
-    this.skillPoints = null;
+    this.CLASS_POINTS_ALLOWED = null;
+    this.classesSelected = [];
     this.treeSelected = {};
   }
 
@@ -38,6 +38,8 @@ class skillTree extends HTMLElement {
         if (this.hasAttribute('reset')) {
           this.deselectNodes()
         }
+        break;
+      default:
         break;
     }
   }
