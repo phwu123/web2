@@ -15,7 +15,7 @@ class attributeCircle extends HTMLElement {
     this.shadowRoot.appendChild(attribute.cloneNode(true));
   }
 
-  attributeChangedCallback(name, oldVal, newVal) {
+  attributeChangedCallback(name) {
     const classList = this.shadowRoot.querySelector('.attribute-circle').classList
 
     switch (name) {

@@ -1,0 +1,74 @@
+@import '../variables.css';
+
+.centered {
+  position: absolute;
+  top: calc(50% - 50px);
+  left: calc(50% - 50px);
+  transition: all 1.5s ease-in;
+  border-radius: 50%;
+}
+
+.top {
+  position: absolute;
+  top: calc(50% - 250px);
+  left: calc(50% - 50px);
+  transition: all 1.5s ease-in;
+  opacity: 0;
+}
+
+.move-0 {
+  top: calc(50% - 250px);
+  transition: all 1.5s ease-out;
+}
+
+.move-1 {
+  top: calc(50% - 50px);
+  left: calc(50% - 150px);
+  opacity: 1;
+}
+
+.move-2 {
+  top: calc(50% - 50px);
+  left: calc(50% + 50px);
+  opacity: 1;
+}
+
+.left {
+  position: absolute;
+  top: calc(50% - 50px);
+  left: calc(50% - 150px);
+  transition: all 1.5s ease-in;
+  opacity: 0;
+}
+
+.move-3 {
+  top: calc(50% + 150px);
+  left: calc(50% - 150px);
+  opacity: 1;
+}
+
+.move-4 {
+  top: calc(50% + 150px);
+  left: calc(50% + 50px);
+  opacity: 1;
+}
+
+.right {
+  position: absolute;
+  top: calc(50% - 50px);
+  left: calc(50% + 50px);
+  transition: all 1.5s ease-in;
+  opacity: 0;
+}
+
+.move-5 {
+  top: calc(50% + 150px);
+  left: calc(50% - 150px);
+  opacity: 1;
+}
+
+.move-6 {
+  top: calc(50% + 150px);
+  left: calc(50% + 50px);
+  opacity: 1;
+}
