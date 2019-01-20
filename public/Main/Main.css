@@ -1,9 +1,5 @@
 @import '../variables.css';
 
-#main-page {
-  background-color: var(--color-main-bg);
-}
-
 #upper {
   display: flex;
   background-color: var(--color-main-menu);

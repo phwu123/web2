@@ -1,5 +1,4 @@
-const main = document.createElement('main');
-main.innerHTML = `
+const mainTemplate = `
 <link rel="stylesheet" type="text/css" media="screen" href="./Main/Main.css" />
 <div id="main-page">
 
@@ -19,7 +18,7 @@ class mainPage extends HTMLElement {
   }
   constructor() {
     super();
-    this.appendChild(main.cloneNode(true));
+    this.innerHTML = mainTemplate;
     this.eventListeners = [];
     this.classPoints = {
       Strength: [],
