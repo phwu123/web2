@@ -1,5 +1,11 @@
 const skillTreeTemplate = `
   <link rel="stylesheet" type="text/css" media="screen" href="./SkillTree/SkillTree.css" />
+  <node-line position="line1"></node-line>
+  <node-line position="line2"></node-line>
+  <node-line position="line3"></node-line>
+  <node-line position="line4"></node-line>
+  <node-line position="line5"></node-line>
+  <node-line position="line6"></node-line>
 `
 class skillTree extends HTMLElement {
   static get observedAttributes() {
@@ -21,6 +27,7 @@ class skillTree extends HTMLElement {
   connectedCallback() {
     this.skillPoints = this.MAX_SKILL_POINTS
     this.shadowRoot.appendChild(this.createAttributeScript());
+    this.shadowRoot.appendChild(this.createLineScript());
     this.setNode(0);
     this.setEventListener(0);
     this.unblockAll()
@@ -51,6 +58,13 @@ class skillTree extends HTMLElement {
     return attributeScript;
   }
 
+  createLineScript() {
+    const lineScript = document.createElement('script');
+    lineScript.type = 'module';
+    lineScript.src = './Utility/NodeLine/NodeLine.mjs';
+    return lineScript;
+  }
+
   setNode(num) {
     const node = document.createElement('attribute-circle');
     node.id = `${num}`
@@ -60,12 +74,15 @@ class skillTree extends HTMLElement {
     } else if (num < 3) {
       node.classList.add('top');
       node.toggleAttribute('small-circle', true)
+      this.shadowRoot.children[num].toggleAttribute('reveal', true)
     } else if (num < 5) {
       node.classList.add('left');
       node.toggleAttribute('small-circle', true)
+      this.shadowRoot.children[num].toggleAttribute('reveal', true)
     } else if (num < 7) {
       node.classList.add('right');
       node.toggleAttribute('small-circle', true);
+      this.shadowRoot.children[num].toggleAttribute('reveal', true)
     }
     this.shadowRoot.appendChild(node);
     if (num) {
@@ -77,7 +94,7 @@ class skillTree extends HTMLElement {
   }
 
   setEventListener(num) {
-    const node = this.shadowRoot.getElementById(num).shadowRoot.children[0].children[1]
+    const node = this.shadowRoot.getElementById(num).shadowRoot.children[1]
     this.eventListeners[num] = () => {
       this.handleClicks(num);
     }
@@ -85,37 +102,45 @@ class skillTree extends HTMLElement {
   }
 
   destroyEventListener(num) {
-    const node = this.shadowRoot.getElementById(num).shadowRoot.children[0].children[1]
+    const node = this.shadowRoot.getElementById(num).shadowRoot.children[1]
     node.removeEventListener('click', this.eventListeners[num])
   }
 
   selectNode(num) {
     const node = this.shadowRoot.getElementById(num);
+    const line = this.shadowRoot.children[num]
     node.toggleAttribute('selected', true);
+    line.toggleAttribute('selected', true);
   }
 
   deselectNode(num) {
     const node = this.shadowRoot.getElementById(num);
+    const line = this.shadowRoot.children[num];
     node.toggleAttribute('selected', false);
+    line.toggleAttribute('selected', false);
     this.treeSelected[num] = false;
+    if (num === 0) {
+      this.cleanUpNodesSet1()
+    } else if (num == 1) {
+      this.cleanUpNodesSet2()
+    } else if (num == 2) {
+      this.cleanUpNodesSet3()
+    }
   }
 
   handleClicks(num) {
-    switch (num) {
-      case 0:
-        if (this.nodeBlock[0]) break;
-        this.handleNode0();
-        break;
-      case 1:
-        if (this.nodeBlock[1]) break;
+    if (!this.nodeBlock[num]) {
+      this.nodeBlock[num] = true
+      if (!num) {
+        this.handleNode0()
+      } else {
         this.handleMovement(num)
-        break
-      case 2:
-        if (this.nodeBlock[2]) break;
-        this.handleMovement(num)
-        break
-      default:
-        break;
+      }
+      setTimeout(() => {
+        if (this.nodeBlock) {
+          this.nodeBlock[num] = false
+        }
+      }, 1500);
     }
   }
 
@@ -147,51 +172,77 @@ class skillTree extends HTMLElement {
           this.setNode(num * 2 + 2);
         }, 1500);
       }
-    } else if (node.getAttribute('selected')) {
-
     }
   }
 
   handleNode0() {
     if (this.nodeZoom[0]) {
-      this.deselectAll()
-      this.cleanUpNodes()
+      this.handleInitialMovement(0)
       this.selectNode(0)
     } else if (!this.nodeZoom[0]) {
-      this.deselectNode(0)
+      this.deselectAll()
       this.focusNode(0)
     }
   }
 
-  cleanUpNodes() {
-    for (let i = 5; i < 7; i++) {
-      const node = this.shadowRoot.getElementById(i)
-      if (node) {
-        node.classList.add('right')
-        node.classList.remove(`move-${i}`)
-        this.destroyEventListener(i)
-        node.parentNode.removeChild(node);
-      }
-    }
-    for (let i = 3; i < 5; i++) {
-      const node = this.shadowRoot.getElementById(i)
-      if (node) {
-        node.classList.add('left')
-        node.classList.remove(`move-${i}`)
-        this.destroyEventListener(i)
-        node.parentNode.removeChild(node);
-      }
-    }
+  cleanUpNodesSet1() {
     for (let i = 1; i < 3; i++) {
       const node = this.shadowRoot.getElementById(i)
       if (node) {
-        node.classList.add('top')
-        node.classList.remove(`move-${i}`)
         this.destroyEventListener(i)
-        node.parentNode.removeChild(node);
+        node.toggleAttribute('hide', true)
+        setTimeout(() => {   
+          node.parentNode.removeChild(node);
+        }, 1500);
+      }
+      const line = this.shadowRoot.children[i];
+      if (line.hasAttribute('reveal')) {
+        line.toggleAttribute('hide', true);
+        setTimeout(() => {
+          line.toggleAttribute('reveal', false);
+        }, 1500);
       }
     }
-    this.handleInitialMovement(0)
+  }
+
+  cleanUpNodesSet2() {
+    for (let i = 3; i < 5; i++) {
+      const node = this.shadowRoot.getElementById(i)
+      if (node) {
+        this.destroyEventListener(i)
+        node.toggleAttribute('hide', true)
+        setTimeout(() => {   
+          node.parentNode.removeChild(node);
+        }, 1500);
+      }
+      const line = this.shadowRoot.children[i];
+      if (line.hasAttribute('reveal')) {
+        line.toggleAttribute('hide', true);
+        setTimeout(() => {
+          line.toggleAttribute('reveal', false);
+        }, 1500);
+      }
+    }
+  }
+
+  cleanUpNodesSet3() {
+    for (let i = 5; i < 7; i++) {
+      const node = this.shadowRoot.getElementById(i)
+      if (node) {
+        this.destroyEventListener(i)
+        node.toggleAttribute('hide', true)
+        setTimeout(() => {   
+          node.parentNode.removeChild(node);
+        }, 1500);
+      }
+      const line = this.shadowRoot.children[i];
+      if (line.hasAttribute('reveal')) {
+        line.toggleAttribute('hide', true);
+        setTimeout(() => {
+          line.toggleAttribute('reveal', false);
+        }, 1500);
+      }
+    }
   }
 
   focusNode(num) {
@@ -204,17 +255,22 @@ class skillTree extends HTMLElement {
     node.classList.remove(`move-${num}`)
     if (num === 1 || num === 2) {
       node.classList.remove('top');
+    } else if (num === 3 || num === 4) {
+      node.classList.remove('left')
+    } else if (num === 5 || num === 6) {
+      node.classList.remove('right');
     }
     if (num) {
       node.classList.add('centered');
     }
     node.toggleAttribute('small-circle', false)
     for (let block in this.nodeBlock) {
-      if (document.getElementById(block) && block != num) {
+      if (this.shadowRoot.getElementById(block) && block != num) {
         this.nodeBlock[block] = true;
-        document.getElementById(block).toggleAttribute('hide', true);
+        this.shadowRoot.getElementById(block).toggleAttribute('hide', true);
       };
     };
+    this.hideLines()
   }
 
   unfocusNode(num) {
@@ -225,6 +281,10 @@ class skillTree extends HTMLElement {
     }
     if (num == 1 || num == 2) {
       node.classList.add('top');
+    } else if (num == 3 || num == 4) {
+      node.classList.add('left')
+    } else if (num == 5 || num == 6) {
+      node.classList.add('right')
     }
     node.toggleAttribute('small-circle', true)
     this.nodeZoom[num] = false
@@ -236,6 +296,7 @@ class skillTree extends HTMLElement {
         };
       };
     };
+    this.unhideLines()
   }
 
   unfocusAll() {
@@ -259,7 +320,9 @@ class skillTree extends HTMLElement {
   }
 
   deselectNodes() {
-    this.unfocusAll()
+    if (!this.nodeZoom[0]) {
+      this.unfocusAll()
+    }
     this.toggleAttribute('reset', false)
   }
 
@@ -269,6 +332,23 @@ class skillTree extends HTMLElement {
     }
   }
 
+  hideLines() {
+    for (let i = 1; i < 7; i++) {
+      const line = this.shadowRoot.children[i];
+      if (line.hasAttribute('reveal')) {
+        line.toggleAttribute('hide', true);
+      }
+    }
+  }
+
+  unhideLines() {
+    for (let i = 1; i < 7; i++) {
+      const line = this.shadowRoot.children[i];
+      if (line.hasAttribute('reveal')) {
+        line.toggleAttribute('hide', false);
+      }
+    }
+  }
 }
 
 customElements.define('skill-tree', skillTree);

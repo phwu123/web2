@@ -1,0 +1,71 @@
+@import '../../variables.css';
+
+.node-line {
+  position: absolute;
+  width: 150px;
+  height: 5px;
+  box-shadow: inset 0 0 0 1px white;
+  opacity: 0;
+}
+
+.length {
+  position: absolute;
+  width: 0%;
+  height: 100%;
+  background-color: white;
+  transition: width 1.5s 2.5s;
+}
+
+.selected {
+  width: 100%;
+}
+
+.reveal {
+  opacity: 1;
+  transition: opacity 1.5s 2s; 
+}
+
+.hide {
+  opacity: 0;
+  transition: opacity 1.5s;
+}
+
+.line1 {
+  transform: rotate(116deg);
+  top: calc(50% - 100px);
+  left: calc(50% - 120px);
+}
+
+.line2 {
+  transform: rotate(64deg);
+  top: calc(50% - 100px);
+  left: calc(50% - 20px);
+}
+
+.line3 {
+  width: 120px;
+  transform: rotate(90deg);
+  top: calc(50% + 100px);
+  left: calc(50% - 159px);
+}
+
+.line4 {
+  width: 200px;
+  transform: rotate(45deg);
+  top: calc(50% + 98px);
+  left: calc(50% - 98px);
+}
+
+.line5 {
+  width: 200px;
+  transform: rotate(135deg);
+  top: calc(50% + 98px);
+  left: calc(50% - 98px);
+}
+
+.line6 {
+  width: 120px;
+  transform: rotate(90deg);
+  top: calc(50% + 100px);
+  left: calc(50% + 42px);
+}
