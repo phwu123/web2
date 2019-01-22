@@ -20,8 +20,10 @@ class skillTree extends HTMLElement {
     this.nodeBlock = {};
     this.eventListeners = [];
     this.CLASS_POINTS_ALLOWED = null;
-    this.classesSelected = [];
+    this.classesSelected = {};
     this.treeSelected = {};
+    this.classToParent = null;
+    this.proxyClasses = null
   }
 
   connectedCallback() {
@@ -31,6 +33,15 @@ class skillTree extends HTMLElement {
     this.setNode(0);
     this.setEventListener(0);
     this.unblockAll()
+    this.classToParent = new CustomEvent('updateClasses',
+    { 
+      bubbles: true,
+      detail: {
+        type: this.getAttribute('type'),
+        classes: this.classesSelected
+      }
+    })
+    this.setUpProxyClasses()
   }
 
   disconnectedCallback() {
@@ -49,6 +60,17 @@ class skillTree extends HTMLElement {
       default:
         break;
     }
+  }
+
+  setUpProxyClasses() {
+    const proxy = new Proxy(this.classesSelected, {
+      set: (target, prop, value) => {
+        target[prop] = value
+        this.dispatchEvent(this.classToParent)
+        return true
+      }
+    })
+    this.proxyClasses = proxy
   }
 
   createAttributeScript() {
@@ -111,6 +133,7 @@ class skillTree extends HTMLElement {
     const line = this.shadowRoot.children[num]
     node.toggleAttribute('selected', true);
     line.toggleAttribute('selected', true);
+    this.proxyClasses[num] = true
   }
 
   deselectNode(num) {
@@ -118,6 +141,7 @@ class skillTree extends HTMLElement {
     const line = this.shadowRoot.children[num];
     node.toggleAttribute('selected', false);
     line.toggleAttribute('selected', false);
+    this.proxyClasses[num] = false
     this.treeSelected[num] = false;
     if (num === 0) {
       this.cleanUpNodesSet1()
