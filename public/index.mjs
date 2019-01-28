@@ -49,7 +49,7 @@ class splashPage extends HTMLElement {
     const collection = document.getElementById('attributes').children;
     const attributes = [...collection];
     attributes.map((child) => {
-      child.toggleAttribute('hover-splash')
+      child.toggleAttribute('hover')
       child.addEventListener('click', this.handleSelectionChoice)
     })
     setTimeout(() => {

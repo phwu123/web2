@@ -45,7 +45,7 @@ class skillTree extends HTMLElement {
   }
 
   disconnectedCallback() {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < this.eventListeners.length; i++) {
       this.destroyEventListener(i);
     }
   }
@@ -183,7 +183,6 @@ class skillTree extends HTMLElement {
   }
 
   handleMovement(num) {
-    const node = this.shadowRoot.getElementById(num);
     if (!this.nodeZoom[num]) {
       this.focusNode(num);
     } else if (this.nodeZoom[num]) {

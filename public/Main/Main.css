@@ -28,12 +28,19 @@
   background-color: var(--color-main-menu);
 }
 
-.container {
-  height: 600px;
-  width: 300px;
+#node-details {
+  display: grid;
+  color: white;
 }
 
 #points-remaining {
   position: absolute;
   color: white;
+}
+
+#attribute-wheel {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
 }

@@ -5,19 +5,25 @@
   width: 100px;
   border-radius: 50%;
   border: 2px solid white;
+  background-color: var(--color-main-bg);
   cursor: pointer;
   transition: transform 1.5s ease-in;
 }
 
-.hover-splash:hover {
+.hover:hover {
   background-color: white;
-  transition: all 1s;
+  transition: all 1.5s;
 }
 
 .small-circle {
   transform: scale(0.3);
   border: 3px solid white;
   transition: all 1.5s ease-in;
+}
+
+.wheel-circle {
+  transform: scale(0.5);
+  transition: none;
 }
 
 .selected {

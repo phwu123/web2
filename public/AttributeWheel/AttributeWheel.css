@@ -1,0 +1,48 @@
+@import '../variables.css';
+
+.wheel {
+  border: 1px solid white;
+  border-top-left-radius: 100%;
+  background-color: var(--color-main-bg);
+}
+
+.inner {
+  width: 190px;
+  height: 190px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+}
+
+.outer {
+  width: 200px;
+  height: 200px;
+}
+
+.middle {
+  width: 195px;
+  height: 195px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border-color: transparent;
+}
+
+.attribute0 {
+  position: absolute;
+  z-index: 4;
+  transform: translate(-37.3px, 68.3px);
+}
+
+.attribute1 {
+  position: absolute;
+  transform: translate(5px, 5px);
+  z-index: 4;
+}
+
+.attribute2 {
+  position: absolute;
+  transform: translate(68.3px, -37.3px);
+  z-index: 4;
+}

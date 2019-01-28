@@ -5,7 +5,7 @@ const attribute = `
 
 class attributeCircle extends HTMLElement {
   static get observedAttributes() {
-    return ['type', 'small-circle', 'hover-splash', 'selected', 'hide'];
+    return ['type', 'small-circle', 'wheel-circle', 'hover', 'selected', 'hide'];
   }
   
   constructor() {
@@ -18,16 +18,19 @@ class attributeCircle extends HTMLElement {
     const classList = this.shadowRoot.querySelector('.attribute-circle').classList
 
     switch (name) {
-      case 'hover-splash':
-        if (this.hasAttribute('hover-splash')) {
-          classList.add('hover-splash')
-        }
+      case 'hover':
+        classList.add('hover')
         break;
       case 'small-circle':
         if (this.hasAttribute('small-circle')) {
           classList.add('small-circle'); 
         } else {
           classList.remove('small-circle');
+        }
+        break;
+      case 'wheel-circle':
+        if (this.hasAttribute('wheel-circle')) {
+          classList.add('wheel-circle')
         }
         break;
       case 'selected':
