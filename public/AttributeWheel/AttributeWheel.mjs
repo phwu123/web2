@@ -18,7 +18,7 @@ class attributeWheel extends HTMLElement {
 
   connectedCallback() {
     this.shadowRoot.appendChild(this.createAttributeScript())
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; ++i) {
       const attributeCircle = document.createElement('attribute-circle')
       attributeCircle.toggleAttribute('wheel-circle', true)
       attributeCircle.setAttribute('type', this.types[i])
@@ -46,7 +46,7 @@ class attributeWheel extends HTMLElement {
   setUpEventListeners() {
     const nodes = this.shadowRoot.children[2].children
     const circles = [...nodes]
-    for (let i = 0; i < circles.length; i++) {
+    for (let i = 0; i < circles.length; ++i) {
       circles[i].shadowRoot.children[1].addEventListener('click', this.changeAttribute)
     }
   }
@@ -59,6 +59,17 @@ class attributeWheel extends HTMLElement {
       }
     })
     document.getElementById('attribute-wheel').dispatchEvent(changeAttribute)
+    document.getElementById('attribute-wheel').toggleAttributes(e.target.parentNode.host)
+  }
+
+  toggleAttributes(node) {
+    const wheel = node.parentNode
+    node.toggleAttribute('selected', true)
+    for (let i = 0; i < this.types.length; ++i) {
+      if (node !== wheel.children[i]) {
+        wheel.children[i].toggleAttribute('selected', false)
+      }
+    }
   }
 }
 
