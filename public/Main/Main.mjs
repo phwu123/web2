@@ -41,6 +41,7 @@ class mainPage extends HTMLElement {
     document.getElementById('center').append(attributeWheel)
     this.addEventListener('updateClasses', this.handleClasses)
     this.addEventListener('changeAttribute', this.changeAttribute)
+    this.addEventListener('removeSkillTree', this.removeSkillTree)
     this.printAttributes()
   }
 
@@ -63,7 +64,6 @@ class mainPage extends HTMLElement {
 
   handleClasses(e) {
     this.classPoints[e.detail.type] = e.detail.classes
-    console.log('type ', e.detail.type)
     this.classPointsRemaining = this.calculateClassPointsRemaining()
     document.getElementById('points-remaining').innerHTML = `Points Remaining: ${this.classPointsRemaining}`
     this.printAttributes()
@@ -91,6 +91,7 @@ class mainPage extends HTMLElement {
   createSkillTree() {
     const skillTree = document.createElement('skill-tree')
     skillTree.setAttribute('type', this.getAttribute('type'))
+    skillTree.setAttribute('chosen', JSON.stringify(this.classPoints[skillTree.getAttribute('type')]))
     document.getElementById('skill-tree-container').appendChild(skillTree)
   }
 
@@ -109,6 +110,10 @@ class mainPage extends HTMLElement {
 
   changeAttribute(e) {
     this.setAttribute('type', e.detail.type)
+    document.getElementById('skill-tree-container').children[0].toggleAttribute('remove', true)
+  }
+
+  removeSkillTree () {
     document.getElementById('skill-tree-container').children[0].remove()
     this.createSkillTree()
   }

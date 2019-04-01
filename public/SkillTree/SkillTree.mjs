@@ -9,7 +9,7 @@ const skillTreeTemplate = `
 `
 class skillTree extends HTMLElement {
   static get observedAttributes() {
-    return ['type', 'reset'];
+    return ['type', 'reset', 'chosen', 'remove'];
   }
 
   constructor() {
@@ -45,9 +45,7 @@ class skillTree extends HTMLElement {
   }
 
   disconnectedCallback() {
-    for (let i = 0; i < this.eventListeners.length; i++) {
-      this.destroyEventListener(i);
-    }
+    
   }
 
   attributeChangedCallback(name, oldVal, newVal) {
@@ -57,9 +55,22 @@ class skillTree extends HTMLElement {
           this.deselectNodes()
         }
         break;
+      case 'remove':
+        if (this.hasAttribute('remove')) {
+          this.removeSkillTree()
+        }
       default:
         break;
     }
+  }
+
+  removeSkillTree () {
+    for (let i = 0; i < 7; i++) {
+      if (this.eventListeners[i]) {
+        this.destroyEventListener(i);
+      }
+    }
+    this.dispatchEvent(new CustomEvent('removeSkillTree', { bubbles: true}))
   }
 
   setUpProxyClasses() {
